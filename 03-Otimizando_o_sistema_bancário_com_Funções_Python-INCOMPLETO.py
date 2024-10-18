@@ -143,7 +143,7 @@ def sacar(numero_saques_dia, limite_saques_dia, saldo, extrato, valor):
     
 
 #Mostra o extrato na tela
-def extrato(numero_saques_dia, limite_saques_dia, saldo, extrato):
+def exibir_extrato(numero_saques_dia, limite_saques_dia, saldo, extrato):
     
     #Verifica quantos saques tem disponíveis
     saques_disponíveis = limite_saques_dia-numero_saques_dia
@@ -176,6 +176,86 @@ def extrato(numero_saques_dia, limite_saques_dia, saldo, extrato):
 
             ===============================================
             """)
+         
+    print (menu_extrato)
+    time.sleep(3)
+
+
+def verificar_usuario(usuarios, cpf):
+    for usuario in usuarios:
+        if usuario ["cpf"] == cpf:
+            print(textwrap.dedent(f"""
+                            !!!! CADASTRO INVÁLIDO !!!
+                                  
+                O CPF informado já está cadastrodo no nosso sistema     
+                """))
+            break
+        
+        else:
+            return cpf
+
+
+
+def novo_usuario (usuarios):
+
+    #Menu que será utilizado como modelo para o cpf
+    cpf = input(textwrap.dedent("""
+        ================= NOVO USUÁRIO ================
+
+                        DIGITE O SEU CPF
+        
+        Modelo: apenas números
+
+        => """))
+    
+    cpf = verificar_usuario(usuarios= usuarios, cpf= cpf)
+    
+    #Menu que será utilizado como modelo para o nome
+    nome = input(textwrap.dedent("""
+        ================= NOVO USUÁRIO ================
+
+                    DIGITE O SEU NOME COMPLETO
+        
+        => """))
+    
+    #Menu que será utilizado como modelo para o data de nascimento
+    data_nascimento = input(textwrap.dedent("""
+        ================= NOVO USUÁRIO ================
+
+                DIGITE SUA DATA DE NASCIMENTO
+        
+        Modelo: dd/mm/aaaa
+                                            
+        => """))
+    
+    #Menu que será utilizado como modelo para o cep
+    cep =  input(textwrap.dedent("""
+        ================= NOVO USUÁRIO ================
+
+                        DIGITE O SEU CEP
+                                     
+        Modelo: Logradouro, n° - bairro - cidade/estado (sigla)
+        
+        => """))
+    
+    #Menu que será utilizado como modelo para o endereço
+    endereço = input(textwrap.dedent("""
+        ================= NOVO USUÁRIO ================
+
+                    DIGITE O SEU ENDEREÇO
+                                     
+        Modelo: Logradouro, n° - bairro - cidade/estado (sigla)
+        
+        => """))
+    
+    usuarios.append({"cpf": cpf, "nome": nome, "data_nascimento": data_nascimento, "cep": cep,  "endereço": endereço}) 
+
+    
+
+    
+
+    
+
 
 
 def processo():
@@ -185,22 +265,22 @@ def processo():
     saldo = 100
     numero_saques_dia = 0
     extrato = ""
+    usuarios = []
+    conta_corrente = []
 
     while True:
         opcao = menu()
 
         #Caso depósito seja selecionado
         if opcao == "d":
-            #Menu de depósito que será utilizad
-            menu_deposito = textwrap.dedent("""
-                ====================DEPÓSITO===================
-                
-                        DIGITE O VALOR DO DEPÓSITO
+            #Menu que será utilizado como modelo para o depósito
+            valor = float(input(textwrap.dedent("""
+                =================== DEPÓSITO ==================
 
-                => """)
-    
-            valor = float(input(menu_deposito))
+                        DIGITE O VALOR DO SAQUE
 
+                => """)))
+                        
             saldo, extrato = depositar(
                 valor = valor, 
                 saldo = saldo,
@@ -210,14 +290,12 @@ def processo():
         #Caso saque seja selecionado    
         elif opcao == "s":
             #Menu que será utilizado como modelo para o saque
-            menu_saque = textwrap.dedent("""
+            valor = float(input(textwrap.dedent("""
                 =====================SAQUE=====================
 
                         DIGITE O VALOR DO SAQUE
 
-                => """)
-
-            valor = float(input(menu_saque))
+                => """)))
 
             saldo, extrato = sacar(
                 numero_saques_dia= numero_saques_dia,
@@ -229,7 +307,7 @@ def processo():
             
         #Caso extrato seja selecionado
         elif opcao == "e":
-            extrato(
+            exibir_extrato(
                 numero_saques_dia= numero_saques_dia, 
                 limite_saques_dia= LIMITE_SAQUES_DIA, 
                 saldo= saldo, 
